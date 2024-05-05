@@ -4,9 +4,7 @@ import { ProductoForm, productosSchema } from "../types/Producto";
 export const obtenerProductos = async () => {
   try {
     const { data } = await api("/productos/");
-    console.log(data);
     const response = productosSchema.safeParse(data);
-    console.log(response);
     if (response.success) {
       return response.data;
     }

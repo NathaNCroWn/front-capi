@@ -18,6 +18,7 @@ const Admin = () => {
     productImg: null,
   });
 
+  // fech de la data
   const { data } = useQuery({
     queryKey: ["productos"],
     queryFn: obtenerProductos,
@@ -165,7 +166,7 @@ const Admin = () => {
                 />
               </svg>
             </div>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-4 xl:flex-row">
                 <div className="xl:w-1/2 ">
                   <label
