@@ -30,7 +30,7 @@ const Admin = () => {
       [name]: files ? files[0] : value,
     }));
   };
-  const { mutate } = useMutation({
+  const crearProductoMutation = useMutation({
     mutationFn: crearProducto,
     onSuccess: () => {
       alert("Producto creado con exito");
@@ -57,7 +57,7 @@ const Admin = () => {
       price: 0,
       productImg: null,
     });
-    mutate(producto);
+    crearProductoMutation.mutate(producto);
   };
   return (
     <div>

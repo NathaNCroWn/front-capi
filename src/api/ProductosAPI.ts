@@ -25,15 +25,8 @@ export const crearProducto = async (producto: ProductoForm) => {
       producto.productoDescripcionSimple
     );
     formData.append("price", producto.price.toString());
-    producto.productImg && formData.append("productImg", producto.productImg);
-    console.log(formData.get("productImg"));
-    const response = await api.post("/productos/create-producto", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-
-    console.log(response.data);
+    formData.append("productoImg", producto.productImg as File);
+    await api.post("/productos/create-producto", formData);
   } catch (error) {
     console.log(error);
   }
