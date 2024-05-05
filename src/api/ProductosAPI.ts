@@ -38,3 +38,8 @@ export const crearProducto = async (producto: ProductoForm) => {
     console.log(error);
   }
 };
+
+export const eliminarProducto = async (id: number) => {
+  console.log(id);
+  await api.delete(`/productos/borrar-producto/${id}`);
+};

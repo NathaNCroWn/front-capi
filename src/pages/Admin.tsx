@@ -1,8 +1,12 @@
 import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { crearProducto, obtenerProductos } from "../api/ProductosAPI";
+import {
+  crearProducto,
+  eliminarProducto,
+  obtenerProductos,
+} from "../api/ProductosAPI";
 import { useState } from "react";
-import { ProductoForm } from "../types/Producto";
+import { ProductoForm, Producto } from "../types/Producto";
 
 const Admin = () => {
   const queryClient = useQueryClient();
@@ -34,6 +38,16 @@ const Admin = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: eliminarProducto,
+    onSuccess: () => {
+      alert("Producto eliminado con exito");
+      queryClient.invalidateQueries({ queryKey: ["productos"] });
+    },
+  });
+  const handleEliminar = (id: Producto["id"]) => {
+    deleteMutation.mutate(id);
+  };
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setProducto({
@@ -110,12 +124,12 @@ const Admin = () => {
                   >
                     Editar
                   </a>
-                  <a
-                    href="#"
+                  <button
+                    onClick={() => handleEliminar(producto.id)}
                     className="font-medium text-red-600 dark:text-red-500 hover:underline"
                   >
                     Eliminar
-                  </a>
+                  </button>
                 </td>
               </tr>
             ))}
