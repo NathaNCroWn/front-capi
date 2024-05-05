@@ -1,46 +1,49 @@
 import { Link } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { crearProducto, obtenerProductos } from "../api/ProductosAPI";
 import { useState } from "react";
 import { ProductoForm } from "../types/Producto";
 
 const Admin = () => {
+  const queryClient = useQueryClient();
   const [producto, setProducto] = useState<ProductoForm>({
-    price: 0,
+    productoNombre: "",
     productoDescripcion: "",
     productoDescripcionSimple: "",
-    productoNombre: "",
+    price: 0,
+    productImg: null,
   });
 
   const { data } = useQuery({
     queryKey: ["productos"],
     queryFn: obtenerProductos,
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const isNumberField = ["price"].includes(name)
-    const valorFinal = isNumberField ? +value : value
-    setProducto({
-      ...producto,
-      [name]: valorFinal
-    });
+    const { name, value, files } = e.target;
+    setProducto((prev) => ({
+      ...prev,
+      [name]: files ? files[0] : value,
+    }));
   };
   const { mutate } = useMutation({
     mutationFn: crearProducto,
+    onSuccess: () => {
+      alert("Producto creado con exito");
+      queryClient.invalidateQueries({ queryKey: ["productos"] });
+    },
   });
 
-  const handleFrom  = (producto: ProductoForm) =>{
-    const data = new FormData
-    data.append("productoNombre", producto.productoNombre)
-    data.append("productoDescripcionSimple", producto.productoDescripcionSimple)
-    data.append("productoDescripcion", producto.productoDescripcion)
-    data.append("price", producto.price.toString())
-    mutate(data);
-  }
-  const handleSubmit =  (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    handleFrom(producto)
-   
+    setProducto({
+      productoNombre: "",
+      productoDescripcion: "",
+      productoDescripcionSimple: "",
+      price: 0,
+      productImg: null,
+    });
+    mutate(producto);
   };
   return (
     <div>
@@ -148,7 +151,7 @@ const Admin = () => {
                 />
               </svg>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} encType="multipart/form-data">
               <div className="flex flex-col gap-4 xl:flex-row">
                 <div className="xl:w-1/2 ">
                   <label
@@ -203,7 +206,7 @@ const Admin = () => {
                     required
                   />
                 </div>
-                {/* <div className="w-full">
+                <div className="w-full">
                   <label
                     htmlFor="productoImg"
                     className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -212,14 +215,13 @@ const Admin = () => {
                   </label>
                   <input
                     onChange={handleChange}
-                    value={producto.productoImg}
                     type="file"
-                    id="productoImg"
-                    name="productoImg"
+                    id="productImg"
+                    name="productImg"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                     required
                   />
-                </div> */}
+                </div>
               </div>
               <div className="w-full">
                 <label

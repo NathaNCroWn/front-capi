@@ -4,8 +4,9 @@ import { ProductoForm, productosSchema } from "../types/Producto";
 export const obtenerProductos = async () => {
   try {
     const { data } = await api("/productos/");
-    return data
+    console.log(data);
     const response = productosSchema.safeParse(data);
+    console.log(response);
     if (response.success) {
       return response.data;
     }
@@ -14,11 +15,25 @@ export const obtenerProductos = async () => {
   }
 };
 
-
-export const crearProducto = async (formData: FormData) => {
+export const crearProducto = async (producto: ProductoForm) => {
   try {
-    const { data } = await api.post("/productos/create-producto", formData);
-    return {data}
+    const formData = new FormData();
+    formData.append("productoNombre", producto.productoNombre);
+    formData.append("productoDescripcion", producto.productoDescripcion);
+    formData.append(
+      "productoDescripcionSimple",
+      producto.productoDescripcionSimple
+    );
+    formData.append("price", producto.price.toString());
+    producto.productImg && formData.append("productImg", producto.productImg);
+    console.log(formData.get("productImg"));
+    const response = await api.post("/productos/create-producto", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    console.log(response.data);
   } catch (error) {
     console.log(error);
   }
