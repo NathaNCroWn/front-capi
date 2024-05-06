@@ -31,6 +31,7 @@ export default function NuevoProductoForm({
     onSuccess: () => {
       toast.success("Producto creado correctamente");
       queryClient.invalidateQueries({ queryKey: ["productos"] });
+      setModal(false);
     },
   });
 

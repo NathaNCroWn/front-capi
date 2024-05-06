@@ -9,7 +9,7 @@ import EditarProductoForm from "../components/EditarProducto";
 
 const Admin = () => {
   const [modal, setModal] = useState(false);
-  const [modaledit,setModaledit]=useState(false)
+  const [modaledit, setModaledit] = useState(false);
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["productos"],
@@ -102,13 +102,15 @@ const Admin = () => {
                   {producto.price}
                 </td>
                 <td className="px-6 py-4">
-                  <button
+                  <Link
+                    to={`/admin/${producto.id}`}
                     type="button"
                     onClick={() => setModaledit(!modaledit)}
                     className="font-medium text-blue-600 dark:text-red-500 hover:underline"
                   >
                     Editar
-                  </button>
+                  </Link>
+
                   <button
                     onClick={() => handleEliminar(producto.id)}
                     className="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -121,12 +123,16 @@ const Admin = () => {
           </tbody>
         </table>
       </div>
-
       <div className="flex items-center justify-center">
         {modal && <NuevoProductoForm setModal={setModal} />}
       </div>
       <div className="flex items-center justify-center">
-        {modaledit && <EditarProductoForm setModaledit={setModaledit } />}
+        {modaledit && (
+          <EditarProductoForm
+            setModaledit={setModaledit}
+            modaledit={modaledit}
+          />
+        )}
       </div>
     </div>
   );

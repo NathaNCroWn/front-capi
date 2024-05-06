@@ -10,7 +10,7 @@ export default function CapiTienda() {
         <Outlet />
       </main>
       <Footer />
-      <ToastContainer />
+      <ToastContainer pauseOnHover={false} pauseOnFocusLoss={false} />
     </div>
   );
 }

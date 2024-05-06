@@ -17,6 +17,7 @@ function App() {
           <Route path="inicioSesion" element={<InicioSesion />} />
           <Route path="informacion" element={<Informacion />} />
           <Route path="admin" element={<Admin />} />
+          <Route path="admin/:id" element={<Admin />} />
           <Route path="producto" element={<Producto />} />
         </Route>
       </Routes>
@@ -25,3 +26,5 @@ function App() {
 }
 
 export default App;
+
+// hacer vista del producto, esto quiere decir que cuando se entre al producto se llenen los datos con la imagen  -> !!!NO USAR CHATGPT!!!!

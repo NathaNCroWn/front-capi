@@ -1,14 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ProductoForm } from "../types/Producto";
-import { actualizarProducto } from "../api/ProductosAPI";
+import { actualizarProducto, obtenerProductoPorId } from "../api/ProductosAPI";
+import { useParams } from "react-router-dom";
 type EditarProductoFormProps = {
-    setModaledit: React.Dispatch<React.SetStateAction<boolean>>;
-  };
+  setModaledit: React.Dispatch<React.SetStateAction<boolean>>;
+  modaledit: boolean;
+};
 
-export default function EditarProductoForm({setModaledit,
+export default function EditarProductoForm({
+  setModaledit,
 }: EditarProductoFormProps) {
+  const { id } = useParams();
+  console.log(id);
+  const numberId = parseInt(id!);
   const queryClient = useQueryClient();
   const [producto, setProducto] = useState<ProductoForm>({
     productoNombre: "",
@@ -17,6 +23,22 @@ export default function EditarProductoForm({setModaledit,
     price: 0,
     productImg: null,
   });
+  const { data } = useQuery({
+    queryKey: ["producto", numberId],
+    queryFn: () => obtenerProductoPorId(numberId),
+  });
+  useEffect(() => {
+    if (data !== undefined) {
+      setProducto({
+        ...producto,
+        productoNombre: data.productoNombre,
+        productoDescripcion: data.productoDescripcion,
+        productoDescripcionSimple: data.productoDescripcionSimple,
+        price: +data.price,
+      });
+    }
+  }, [data]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, files } = e.target;
     setProducto((prev) => ({
@@ -26,9 +48,13 @@ export default function EditarProductoForm({setModaledit,
   };
   const editarProductoMutation = useMutation({
     mutationFn: actualizarProducto,
-    onSuccess: () => {
-      toast.success("Producto actualizado correctamente");
+    // onError: (error) => {
+    //   toast.error("");
+    // },
+    onSuccess: (data) => {
+      toast.success(data);
       queryClient.invalidateQueries({ queryKey: ["productos"] });
+      setModaledit(false);
     },
   });
 
@@ -41,13 +67,16 @@ export default function EditarProductoForm({setModaledit,
       price: 0,
       productImg: null,
     });
-    editarProductoMutation.mutate(producto,);
+    const data = { producto, numberId };
+    editarProductoMutation.mutate(data);
   };
   return (
     <div className="border-4 border-black  max-w-screen-lg md:w-[4  00px] lg:w-[1500px] bg-primarioDos rounded-lg shadow-2xl fixed ">
       <div className="py-10 px-10">
         <div className="flex justify-between">
-          <h1 className="text-3xl mt-3 mb-5 text-center">Actualizar producto.</h1>
+          <h1 className="text-3xl mt-3 mb-5 text-center">
+            Actualizar producto.
+          </h1>
 
           <button type="button" onClick={() => setModaledit(false)}>
             <svg
@@ -133,7 +162,6 @@ export default function EditarProductoForm({setModaledit,
                 id="productImg"
                 name="productImg"
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
               />
             </div>
           </div>
