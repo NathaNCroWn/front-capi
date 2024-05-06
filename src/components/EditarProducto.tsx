@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { ProductoForm } from "../types/Producto";
-import { crearProducto } from "../api/ProductosAPI";
+import { actualizarProducto } from "../api/ProductosAPI";
 type EditarProductoFormProps = {
     setModaledit: React.Dispatch<React.SetStateAction<boolean>>;
   };
@@ -24,8 +24,8 @@ export default function EditarProductoForm({setModaledit,
       [name]: files ? files[0] : value,
     }));
   };
-  const crearProductoMutation = useMutation({
-    mutationFn: crearProducto,
+  const editarProductoMutation = useMutation({
+    mutationFn: actualizarProducto,
     onSuccess: () => {
       toast.success("Producto actualizado correctamente");
       queryClient.invalidateQueries({ queryKey: ["productos"] });
@@ -41,7 +41,7 @@ export default function EditarProductoForm({setModaledit,
       price: 0,
       productImg: null,
     });
-    crearProductoMutation.mutate(producto);
+    editarProductoMutation.mutate(producto,);
   };
   return (
     <div className="border-4 border-black  max-w-screen-lg md:w-[4  00px] lg:w-[1500px] bg-primarioDos rounded-lg shadow-2xl fixed ">
