@@ -30,6 +30,23 @@ export const crearProducto = async (producto: ProductoForm) => {
   }
 };
 
+export const actualizarProducto = async(producto:ProductoForm, id:number)=> {
+  try{
+    const formData = new FormData();
+    formData.append("productoNombre", producto.productoNombre);
+    formData.append("productoDescripcion", producto.productoDescripcion);
+    formData.append(
+      "productoDescripcionSimple",
+      producto.productoDescripcionSimple
+    );
+    formData.append("price", producto.price.toString());
+    formData.append("productoImg", producto.productImg as File);
+    await api.put(`/productos/actualizar-producto/${id}`, formData);
+  }catch(error){
+    console.log(error)
+  }
+}
+
 export const eliminarProducto = async (id: number) => {
   console.log(id);
   await api.delete(`/productos/borrar-producto/${id}`);

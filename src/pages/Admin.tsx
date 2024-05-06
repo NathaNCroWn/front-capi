@@ -5,9 +5,11 @@ import { Bounce, toast } from "react-toastify";
 import { Producto } from "../types/Producto";
 import NuevoProductoForm from "../components/NuevoProductoForm";
 import { useState } from "react";
+import EditarProductoForm from "../components/EditarProducto";
 
 const Admin = () => {
   const [modal, setModal] = useState(false);
+  const [modaledit,setModaledit]=useState(false)
   const queryClient = useQueryClient();
   const { data } = useQuery({
     queryKey: ["productos"],
@@ -100,12 +102,13 @@ const Admin = () => {
                   {producto.price}
                 </td>
                 <td className="px-6 py-4">
-                  <a
-                    href="#"
+                  <button
+                    type="button"
+                    onClick={() => setModaledit(!modaledit)}
                     className="font-medium text-blue-600 dark:text-red-500 hover:underline"
                   >
                     Editar
-                  </a>
+                  </button>
                   <button
                     onClick={() => handleEliminar(producto.id)}
                     className="font-medium text-red-600 dark:text-red-500 hover:underline"
@@ -121,6 +124,9 @@ const Admin = () => {
 
       <div className="flex items-center justify-center">
         {modal && <NuevoProductoForm setModal={setModal} />}
+      </div>
+      <div className="flex items-center justify-center">
+        {modaledit && <EditarProductoForm setModaledit={setModaledit } />}
       </div>
     </div>
   );
