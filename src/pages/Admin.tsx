@@ -7,6 +7,10 @@ import {
 } from "../api/ProductosAPI";
 import { useState } from "react";
 import { ProductoForm, Producto } from "../types/Producto";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Alert } from "flowbite-react";
+
+
 
 const Admin = () => {
   const queryClient = useQueryClient();
@@ -34,16 +38,24 @@ const Admin = () => {
   const crearProductoMutation = useMutation({
     mutationFn: crearProducto,
     onSuccess: () => {
-      alert("Producto creado con exito");
+      alert("Producto creado con exito",);
       queryClient.invalidateQueries({ queryKey: ["productos"] });
     },
   });
 
   const deleteMutation = useMutation({
     mutationFn: eliminarProducto,
-    onSuccess: () => {
-      alert("Producto eliminado con exito");
-      queryClient.invalidateQueries({ queryKey: ["productos"] });
+    onSuccess: () => {alert
+      if(window.confirm('Desea borrar el producto')){
+        toast.success('Producto eliminado correctamente',{
+          theme:'dark',
+          hideProgressBar:true,
+          autoClose:400,
+          transition:Bounce
+        })
+        queryClient.invalidateQueries({ queryKey: ["productos"] });
+      }
+
     },
   });
   const handleEliminar = (id: Producto["id"]) => {
@@ -130,6 +142,7 @@ const Admin = () => {
                     className="font-medium text-red-600 dark:text-red-500 hover:underline"
                   >
                     Eliminar
+                    <ToastContainer/>
                   </button>
                 </td>
               </tr>
