@@ -1,19 +1,18 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import InicioProducto from './pages/InicioProducto';
-import Registro from './pages/Registro';
-import InicioSesion from './pages/InicioSesion';
-import Informacion from './pages/Informacion';
-import Admin from './pages/Admin';
-import Producto from './pages/Producto';
-import Principal from './pages/Principal';
-
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import InicioProducto from "./pages/InicioProducto";
+import Registro from "./pages/Registro";
+import InicioSesion from "./pages/InicioSesion";
+import Informacion from "./pages/Informacion";
+import Admin from "./pages/Admin";
+import Producto from "./pages/Producto";
+import CapiTienda from "./layouts/CapiTienda";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path='/' element={<Principal />}>
-          <Route path='/' element={<InicioProducto />} />
+        <Route path="/" element={<CapiTienda />}>
+          <Route path="/" element={<InicioProducto />} />
           <Route path="registro" element={<Registro />} />
           <Route path="inicioSesion" element={<InicioSesion />} />
           <Route path="informacion" element={<Informacion />} />
@@ -21,8 +20,8 @@ function App() {
           <Route path="producto" element={<Producto />} />
         </Route>
       </Routes>
-    </BrowserRouter >
+    </BrowserRouter>
   );
-};
+}
 
-export default App
+export default App;

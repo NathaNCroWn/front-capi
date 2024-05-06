@@ -1,13 +1,10 @@
 import { Link } from "react-router-dom";
 import type { Producto } from "../types/Producto";
 
-
-type ProductoCardProps ={
-    producto: Producto
-}
-
-
-export default function ProductoCard({producto}: ProductoCardProps) {
+type ProductoCardProps = {
+  producto: Producto;
+};
+export default function ProductoCard({ producto }: ProductoCardProps) {
   return (
     <div>
       <div className=" flex items-center justify-center h-[86vh] ">
